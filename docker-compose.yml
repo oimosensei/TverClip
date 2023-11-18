@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  dev-postgres:
+    image: postgres:15.1-alpine
+    ports:
+      - 5434:5432
+    environment:
+      POSTGRES_USER: udemy
+      POSTGRES_PASSWORD: udemy
+      POSTGRES_DB: udemy
+    restart: always
+    networks:
+      - lesson
+  frontend-react:
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend:/app
+      - /app/react-todo/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    networks:
+      - lesson
+    tty: true
+networks:
+  lesson:
