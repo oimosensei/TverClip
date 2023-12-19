@@ -22,7 +22,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Auth />} />
-        <Route path="/todo" element={<Todo />} />
+        <Route path="/clips" element={<Todo />} />
       </Routes>
     </BrowserRouter>
   );
