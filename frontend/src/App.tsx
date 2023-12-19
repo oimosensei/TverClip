@@ -8,6 +8,7 @@ import { CsrfToken } from "./types";
 
 function App() {
   useEffect(() => {
+    document.title = "TverClip";
     axios.defaults.withCredentials = true;
     const getCsrfToken = async () => {
       const { data } = await axios.get<CsrfToken>(
