@@ -10,6 +10,7 @@ import (
 )
 
 type ITaskUsecase interface {
+	GetAllTasks() ([]model.TaskResponse, error)
 	GetTasksByUserID(userID uint) ([]model.TaskResponse, error)
 	GetTaskByID(taskID uint) (model.TaskResponse, error)
 	CreateTask(task model.Task) (model.TaskResponse, error)
@@ -23,6 +24,29 @@ type TaskUsecase struct {
 
 func NewTaskUsecase(tr repository.ITaskRepository) ITaskUsecase {
 	return &TaskUsecase{tr}
+}
+
+func (tu *TaskUsecase) GetAllTasks() ([]model.TaskResponse, error) {
+	tasks := []model.Task{}
+	if err := tu.tr.GetAllTasks(&tasks); err != nil {
+		return []model.TaskResponse{}, err
+	}
+
+	resTasks := []model.TaskResponse{}
+	for _, task := range tasks {
+		resTasks = append(resTasks, model.TaskResponse{
+			ID:             task.ID,
+			UserID:         task.UserID,
+			Title:          task.Title,
+			Description:    task.Description,
+			URL:            task.URL,
+			IsDone:         task.IsDone,
+			OTGImageURL:    task.OTGImageURL,
+			OTGDescription: task.OTGDescription,
+		})
+	}
+
+	return resTasks, nil
 }
 
 func (tu *TaskUsecase) GetTasksByUserID(userID uint) ([]model.TaskResponse, error) {

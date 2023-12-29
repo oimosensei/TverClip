@@ -8,6 +8,7 @@ import (
 )
 
 type ITaskRepository interface {
+	GetAllTasks(tasks *[]model.Task) error
 	GetTasksByUserID(tasks *[]model.Task, userID uint) error
 	GetTaskByID(task *model.Task, id uint) error
 	CreateTask(task *model.Task) error
@@ -21,6 +22,13 @@ type TaskRepository struct {
 
 func NewTaskRepository(db *gorm.DB) ITaskRepository {
 	return &TaskRepository{db}
+}
+
+func (tr *TaskRepository) GetAllTasks(tasks *[]model.Task) error {
+	if err := tr.db.Find(tasks).Error; err != nil {
+		return err
+	}
+	return nil
 }
 
 func (tr *TaskRepository) GetTasksByUserID(tasks *[]model.Task, userID uint) error {
