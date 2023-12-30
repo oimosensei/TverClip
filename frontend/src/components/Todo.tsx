@@ -7,10 +7,12 @@ import {
   TvIcon,
 } from "@heroicons/react/24/solid";
 import useStore from "../store";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQueryTasks } from "../hooks/useQueryTasks";
 import { useMutateTask } from "../hooks/useMutateTask";
 import { useMutateAuth } from "../hooks/useMutateAuth";
+import { User } from "../types";
+import { useUser } from "../contexts/UserContext";
 import { TaskItem } from "./TaskItem";
 import { CreateOrUpdateTaskModal } from "./CreateTaskModal";
 import { Header } from "./Header";
@@ -21,8 +23,8 @@ export const Todo = () => {
   const updateTask = useStore((state) => state.updateEditedTask);
   const { data, isLoading } = useQueryTasks();
   const { createTaskMutation, updateTaskMutation } = useMutateTask();
-  const { logoutMutation } = useMutateAuth();
-
+  const { logoutMutation, getUserMutation } = useMutateAuth();
+  const { user } = useUser();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const resetEditedTask = useStore((state) => state.resetEditedTask);
   const submitTaskHandler = (e: FormEvent<HTMLFormElement>) => {
@@ -41,6 +43,9 @@ export const Todo = () => {
     await logoutMutation.mutateAsync();
     queryClient.removeQueries(["tasks"]);
   };
+  useEffect(() => {
+    getUserMutation.mutate();
+  }, []);
   return (
     <div>
       <Header />
