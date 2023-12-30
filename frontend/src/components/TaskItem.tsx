@@ -5,6 +5,9 @@ import { Task } from "../types";
 import { useMutateTask } from "../hooks/useMutateTask";
 import { useState } from "react";
 import { CreateOrUpdateTaskModal } from "./CreateTaskModal";
+import { DeleteTaskModal } from "./DeleteTaskModal";
+import { User } from "../types";
+import { useUser } from "../contexts/UserContext";
 
 const TaskItemMemo: FC<Omit<Task, "created_at" | "updated_at">> = ({
   id,
@@ -19,13 +22,18 @@ const TaskItemMemo: FC<Omit<Task, "created_at" | "updated_at">> = ({
   const { deleteTaskMutation } = useMutateTask();
 
   // モーダルの開閉状態を管理する state
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [updateModalIsOpen, setUpdateModalIsOpen] = useState(false);
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
 
   // モーダルを開く関数
-  const openModal = () => {
-    setModalIsOpen(true);
+  const openUpdateModal = () => {
+    setUpdateModalIsOpen(true);
   };
 
+  const openDeleteModal = () => {
+    setDeleteModalIsOpen(true);
+  };
+  const { user } = useUser();
   return (
     <div
       // href={url}
@@ -48,32 +56,39 @@ const TaskItemMemo: FC<Omit<Task, "created_at" | "updated_at">> = ({
           <div className="flex justify-between items-center mb-1">
             <span className="font-bold text-lg">{title}</span>
             {/* ここに編集と削除のアイコンを配置 */}
-            <div className="flex ml-4">
-              <PencilIcon
-                className="h-5 w-5 mx-1 text-blue-500 cursor-pointer"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  updateEditedTask({
-                    id: id,
-                    title: title,
-                    description: description,
-                    url: url,
-                  });
-                  openModal();
-                }}
-              />
-              <CreateOrUpdateTaskModal
-                isOpen={modalIsOpen}
-                setIsOpen={setModalIsOpen}
-              />
-              <TrashIcon
-                className="h-5 w-5 text-blue-500 cursor-pointer"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  deleteTaskMutation.mutate(id);
-                }}
-              />
-            </div>
+            {user?.id === user_id && (
+              <div className="flex ml-4">
+                <PencilIcon
+                  className="h-5 w-5 mx-1 text-blue-500 cursor-pointer"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    updateEditedTask({
+                      id: id,
+                      title: title,
+                      description: description,
+                      url: url,
+                    });
+                    openUpdateModal();
+                  }}
+                />
+                <CreateOrUpdateTaskModal
+                  isOpen={updateModalIsOpen}
+                  setIsOpen={setUpdateModalIsOpen}
+                />
+                <TrashIcon
+                  className="h-5 w-5 text-blue-500 cursor-pointer"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    openDeleteModal();
+                  }}
+                />
+                <DeleteTaskModal
+                  id={id}
+                  isOpen={deleteModalIsOpen}
+                  setIsOpen={setDeleteModalIsOpen}
+                />
+              </div>
+            )}
           </div>
           <div className="flex justify-between items-center mb-1">
             <a

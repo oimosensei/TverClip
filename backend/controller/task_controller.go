@@ -12,6 +12,7 @@ import (
 )
 
 type ITaskController interface {
+	GetAllTasks(c echo.Context) error
 	GetTasksByUserID(c echo.Context) error
 	GetTaskByID(c echo.Context) error
 	CreateTask(c echo.Context) error
@@ -25,6 +26,19 @@ type TaskController struct {
 
 func NewTaskController(tu usecase.ITaskUsecase) ITaskController {
 	return &TaskController{tu}
+}
+
+// getalltasks
+func (tc *TaskController) GetAllTasks(c echo.Context) error {
+	println("getalltasks")
+	tasks, err := tc.tu.GetAllTasks()
+	if err != nil {
+		println(err.Error())
+		println(err)
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, tasks)
 }
 
 func (tc *TaskController) GetTasksByUserID(c echo.Context) error {

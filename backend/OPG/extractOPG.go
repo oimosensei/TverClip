@@ -77,7 +77,7 @@ func extractOGPInfo(url string) (*OGPInfo, error) {
 
 func main() {
 	// テスト用のURL
-	url := "https://tver.jp/episodes/epfq2i0l0z?p=429"
+	url := "https://tver.jp/episodes/epl3ocqr50"
 
 	// OGP情報を取得
 	ogpInfo, err := extractOGPInfo(url)

@@ -7,7 +7,7 @@ export const useQueryTasks = () => {
   const { switchErrorHandling } = useError();
   const getTasks = async () => {
     const { data } = await axios.get<Task[]>(
-      `${process.env.REACT_APP_API_URL}/tasks`,
+      `${process.env.REACT_APP_API_URL}/clips`,
       { withCredentials: true }
     );
     return data;

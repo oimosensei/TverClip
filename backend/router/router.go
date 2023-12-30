@@ -22,17 +22,22 @@ func NewRouter(uc controller.IUserController, tc controller.ITaskController) *ec
 	e.POST("/signup", uc.SignUp)
 	e.POST("/login", uc.LogIn)
 	e.POST("/logout", uc.LogOut)
+	e.GET("/clips", tc.GetAllTasks)
 	t := e.Group("/tasks")
 	t.Use(echojwt.WithConfig(echojwt.Config{
 		SigningKey:  []byte(os.Getenv("SECRET")),
 		TokenLookup: "cookie:token",
 	}))
 
-	t.GET("", tc.GetTasksByUserID)
 	t.GET("/:taskId", tc.GetTaskByID)
 	t.POST("", tc.CreateTask)
 	t.PUT("/:taskId", tc.UpdateTask)
 	t.DELETE("/:taskId", tc.DeleteTask)
-
+	s := e.Group("/session")
+	s.Use(echojwt.WithConfig(echojwt.Config{
+		SigningKey:  []byte(os.Getenv("SECRET")),
+		TokenLookup: "cookie:token",
+	}))
+	s.GET("/user", uc.GetUserBySession)
 	return e
 }
