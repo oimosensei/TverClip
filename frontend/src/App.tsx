@@ -5,6 +5,8 @@ import { Auth } from "./components/Auth";
 import { Todo } from "./components/Todo";
 import axios from "axios";
 import { CsrfToken } from "./types";
+import { UserContextProvider } from "./contexts/UserContext";
+import { User } from "./types";
 
 function App() {
   useEffect(() => {
@@ -19,12 +21,14 @@ function App() {
     //getCsrfToken()
   }, []);
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Auth />} />
-        <Route path="/clips" element={<Todo />} />
-      </Routes>
-    </BrowserRouter>
+    <UserContextProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Auth />} />
+          <Route path="/clips" element={<Todo />} />
+        </Routes>
+      </BrowserRouter>
+    </UserContextProvider>
   );
 }
 
