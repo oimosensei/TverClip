@@ -1,5 +1,9 @@
 import { useState, useEffect, FormEvent } from "react";
-import { CheckBadgeIcon, ArrowPathIcon } from "@heroicons/react/24/solid";
+import {
+  TvIcon,
+  CheckBadgeIcon,
+  ArrowPathIcon,
+} from "@heroicons/react/24/solid";
 import { useMutateAuth } from "../hooks/useMutateAuth";
 import { User } from "../types";
 import axios from "axios";
@@ -46,7 +50,7 @@ export const Auth = () => {
   return (
     <div className="flex justify-center items-center flex-col min-h-screen text-gray-600 font-mono">
       <div className="flex items-center">
-        <CheckBadgeIcon className="h-8 w-8 mr-2 text-blue-500" />
+        <TvIcon className="h-16 w-16 mr-2 text-blue-500" />
         <span className="text-center text-3xl font-extrabold">TverClip</span>
       </div>
       <h2 className="my-6">{isLogin ? "Login" : "Create a new account"}</h2>
